@@ -2,7 +2,7 @@
 
 ##使用帮助
 
-###0、说明
+###说明
 
 用 Laravel Facade 封装了 [dodgepudding/wechat-php-sdk](https://github.com/dodgepudding/wechat-php-sdk)，目前只添加了 wechat.class 官方API类库，尽量做到及时更新，还未做全部测试，欢迎提交issue。
 
