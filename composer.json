@@ -1,0 +1,22 @@
+{
+    "name": "zhimei/wechat",
+    "keywords": ["laravel", "weixin", "wechat"],
+    "license": "MIT",
+    "description": "Wechat SDK for Laravel 4",
+    "authors": [
+        {
+            "name": "zhimei",
+            "email": "lyuguang@zhimei360.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Zhimei\\Wechat\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
