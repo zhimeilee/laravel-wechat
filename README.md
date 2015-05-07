@@ -32,6 +32,7 @@
 'Wechat' => 'Zhimei\Wechat\Facades\Wechat',
 ```
 
+执行 php artisan config:publish zhimei/wechat ,然后修改 app/config/packages/zhimei/wechat 中的配置文件 wechat.php 。
 
 把微信公众号的 'token', 'encodingaeskey', 'appid', 'appsecret' 改为对应的。
 
