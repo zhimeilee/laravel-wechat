@@ -32,7 +32,6 @@
 'Wechat' => 'Zhimei\Wechat\Facades\Wechat',
 ```
 
-执行 `php artisan config:publish atan/wechat` ,然后修改 `app/config/packages/atan/wechat` 中的配置文件 `wechat.php` 。
 
 把微信公众号的 'token', 'encodingaeskey', 'appid', 'appsecret' 改为对应的。
 
@@ -45,12 +44,6 @@ Route::get('/users', function(){
     return Wechat::getUserList();
 });
 
-// 回复文本消息
-Route::post('/', function(){
-    $weObj = new Atan\Wechat\Wechat();
-    $type = $weObj->getRev()->getRevType();
-    $weObj->text("hello, it's wechat")->reply();
-});
 ```
 
 
