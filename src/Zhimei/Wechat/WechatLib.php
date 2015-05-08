@@ -1,4 +1,4 @@
-<?php namespace Zhimei\Wechat\WechatLib;
+<?php namespace Zhimei\LaravelWechat;
 
 use Illuminate\Support\Facades\Config as Config;
 use Illuminate\Support\Facades\Cache as Cache;
