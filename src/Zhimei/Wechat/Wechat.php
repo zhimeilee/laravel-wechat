@@ -1,12 +1,27 @@
-<?php namespace Zhimei\Wechat;
+<?php namespace Zhimei\LaravelWechat;
 
-use Illuminate\Support\Facades\Config as Config;
-use Illuminate\Support\Facades\Cache as Cache;
+use Illuminate\Support\Facades\Schema;
+use Zhimei\LaravelWechat\WechatLib\JSSDK;
+use Zhimei\LaravelWechat\WechatLib\WechatPub;
+use Illuminate\Support\Facades\Request;
 
-class Wechat extends WechatLib
-{
+class Wechat extends WechatLib {
 
-	public function __construct($options = 'default')
+	/**
+     * 静态实例
+     *
+     * @var \Zhimei\LaravelWechat\Wechat
+     */
+    static private $_instance;
+
+	static private $_token = 'Wechat_PHP_Token';
+
+    /**
+     * 获取实例
+     *
+     * @param array|null $options
+     */
+    public function __construct($options = 'default')
     {
         $opt = is_array($options)?$options:Config::get('wechat::wechat.'.$options);
         $this->token            = isset($opt['token'])?$opt['token']:'';
@@ -18,7 +33,7 @@ class Wechat extends WechatLib
 		parent::__construct($options);
     }
 
-       /**
+	/**
      * 设置缓存，按需重载
      * @param string $cachename
      * @param mixed $value
@@ -61,4 +76,49 @@ class Wechat extends WechatLib
                 return call_user_func($this->logcallback,$log);
             }
     }
+
+
+	/*
+     * 驗證消息真實性
+     */
+	public function valid(){
+		$echoStr = Request::input("echostr");
+		$signature = Request::input("signature");
+        $timestamp = Request::input("timestamp");
+        $nonce = Request::input("nonce");
+		$token = $this->getValidToken();
+		$tmpArr = array($token, $timestamp, $nonce);
+        sort($tmpArr, SORT_STRING);
+		$tmpStr = implode( $tmpArr );
+		$tmpStr = sha1( $tmpStr );
+		
+		if( $tmpStr == $signature ){
+			return $echoStr;
+		}else{
+			return '';
+		}
+	}
+    public  function getValidToken(){
+        return self::$_token;
+    }
+
+
+
+
+    
+
+	/**
+     * 获取实例
+     *
+     * @return \Zhimei\LaravelWechat\Wechat
+     */
+    static public function make(array $options = null)
+    {
+        if(! (self::$_instance instanceof self)) {
+            self::$_instance = new self($options);
+        }
+        return self::$_instance;
+
+    }
+
 }
