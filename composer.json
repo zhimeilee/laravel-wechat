@@ -24,7 +24,7 @@
     },
     "autoload": {
         "files": [
-            "src/Zhimei/Wechat/helpers.php"
+            "src/helpers.php"
         ],
         "psr-4": {
             "Zhimei\\LaravelWechat\\": "src/"
