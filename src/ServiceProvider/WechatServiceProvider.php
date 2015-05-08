@@ -19,7 +19,7 @@ class WechatServiceProvider extends LaravelServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('zhimei/wechat');
+		//$this->package('zhimei/wechat');
 	}
 
 	/**
