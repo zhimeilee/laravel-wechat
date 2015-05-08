@@ -23,13 +23,13 @@
 打开 `app/config/app.php` ， 在`'providers'` 下添加：
 
 ```
-'Zhimei\Wechat\WechatServiceProvider',
+'Zhimei\LaravelWechat\ServiceProvider\WechatServiceProvider',
 ```
 
 在`'aliases'` 下添加：
 
 ```
-'Wechat' => 'Zhimei\Wechat\Facades\Wechat',
+'Wechat' => 'Zhimei\LaravelWechat\Facade\Wechat',
 ```
 
 执行 php artisan config:publish zhimei/wechat ,然后修改 app/config/packages/zhimei/wechat 中的配置文件 wechat.php 。
