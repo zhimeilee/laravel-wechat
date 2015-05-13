@@ -1,4 +1,4 @@
-<?php namespace Zhimei\Wechat\WechatLib;
+<?php namespace Zhimei\LaravelWechat;
 
 use Illuminate\Support\Facades\Config as Config;
 use Illuminate\Support\Facades\Cache as Cache;
@@ -242,7 +242,7 @@ class WechatLib
             }
         }
 
-        if (!$this->checkSignature($encryptStr)) {
+        if ($encryptStr && !$this->checkSignature($encryptStr)) {
             if ($return)
                 return false;
             else
