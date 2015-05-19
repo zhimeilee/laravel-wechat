@@ -4,7 +4,7 @@
 
 ###说明
 
-用 Laravel Facade 封装了 [dodgepudding/wechat-php-sdk](https://github.com/dodgepudding/wechat-php-sdk)，目前只添加了 wechat.class 官方API类库，尽量做到及时更新，还未做全部测试，欢迎提交issue。
+用 Laravel Facade 封装了 [dodgepudding/wechat-php-sdk](https://github.com/dodgepudding/wechat-php-sdk)，目前只添加了 wechat.class 官方API类库，欢迎提交issue。
 
 ###1、安装
 
@@ -32,7 +32,7 @@
 'Wechat' => 'Zhimei\LaravelWechat\Facade\Wechat',
 ```
 
-执行 php artisan config:publish zhimei/wechat ,然后修改 app/config/packages/zhimei/wechat 中的配置文件 wechat.php 。
+然后配置文件 app/config/wechat.php 。
 
 把微信公众号的 'token', 'encodingaeskey', 'appid', 'appsecret' 改为对应的。
 
@@ -41,10 +41,71 @@
 
 ```php
 // 获取用户列表
-Route::get('/users', function(){
-    return Wechat::getUserList();
+//关注回复
+Wechat::event('subscribe',function($wechat){
+	echo $wechat->text('欢迎关注我们!')->reply('', true);
+});
+Wechat::event('unsubscribe',function($wechat){
+    echo $reply = $wechat->text('欢迎再次关注我们!')->reply('',true);
+    $oldUser = WechatUsers::whereOpenid($wechat->getRevFrom())->first();
+    $oldUser->subscribe = 0;
+    $oldUser->save();
+    $this->_log($wechat, $reply);
+});
+//扫描带参数二维码事件（用户已关注时）
+Wechat::event('SCAN',function($wechat){
+    $event = $wechat->getRevEvent();
+    //扫描带参数二维码事件
+    $qr = MarketToolsChannelQrcode::find($event['key']);
+    if($qr && $qr->reply_style){
+	$arr = explode('|',$qr->reply_style);
+	echo $reply = (new WechatReply)->xmlReplyForWechatById($wechat, $arr[1], $arr[0]);
+    }else{
+	echo $reply = $wechat->text('欢迎关注我们!')->reply('',true);
+    }
+    $this->_log($wechat, $reply);
+});
+//点击菜单拉取消息时的事件推送
+Wechat::event('CLICK',function($wechat){
+    $reply = (new WechatReply)->xmlReplyForWechatByKeyword($wechat);
+    if(empty($reply))
+	echo $reply = $wechat->text('欢迎关注我们!')->reply('',true);
+    else
+	echo $reply;
+    $this->_log($wechat, $reply);
+});
+//默认事件
+Wechat::on('event',function($wechat){
+    echo $reply = $wechat->text('event:'.var_export($wechat->getRevData(),true))->reply('',true);
+    $this->_log($wechat, $reply);
 });
 
+Wechat::on('message', 'location', function($wechat){
+    $geo = $this->getRevGeo();
+    if(empty($geo))
+	echo $reply = $wechat->text('欢迎关注我们!')->reply('',true);
+    else
+	echo $reply = $wechat->text($geo['label'])->reply('',true);
+    $this->_log($wechat, $reply);
+});
+Wechat::on('message', 'text', function($wechat){
+    $reply = (new WechatReply)->xmlReplyForWechatByKeyword($wechat);
+    if(empty($reply))
+	echo $reply = $wechat->text('欢迎关注我们!')->reply('',true);
+    else
+	echo $reply;
+    $this->_log($wechat, $reply);
+});
+Wechat::on('message', function($wechat){
+    $reply = (new WechatReply)->xmlReplyForWechatByKeyword($wechat);
+    if(empty($reply))
+	echo $reply = $wechat->text('欢迎关注我们!')->reply('',true);
+    else
+	echo $reply;
+    $this->_log($wechat, $reply);
+});
+//运行
+Wechat::run();
 ```
 
 

@@ -4,10 +4,6 @@
     "keywords": ["wechat", "zhimei", "weixin", "laravel"],
     "license": "MIT",
     "homepage": "http://www.zhimei360.com",
-    "support": {
-        "issues": "https://github.com/laravel/framework/issues",
-        "source": "https://github.com/laravel/framework"
-    },
     "authors": [
         {
             "name": "Zhimei",
