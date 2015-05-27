@@ -1,6 +1,5 @@
 <?php namespace Zhimei\LaravelWechat;
 
-use App\Model\WechatPublicConfig;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
@@ -33,7 +32,7 @@ class Wechat extends WechatLib {
         $options = Cache::rememberForever('Wechat_Public_Config', function()
         {
             try {
-                $conf = WechatPublicConfig::first();
+                $conf = \App\Models\WechatPublicConfig::first();
                 if($conf){
                     return ['appid'=>$conf->app_id, 'appsecret'=>$conf->app_secret, 'encodingAesKey'=>$conf->encodingaeskey,
                         'mchid'=>$conf->mchid, 'mchkey'=>$conf->mchkey];

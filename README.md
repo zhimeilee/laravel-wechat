@@ -33,8 +33,18 @@
 ```
 
 然后配置文件 app/config/wechat.php 。
-
-把微信公众号的 'token', 'encodingaeskey', 'appid', 'appsecret' 改为对应的。
+```
+return [
+    'default'=>
+        [
+            'appid'         => '', 
+            'appsecret'     => '', 
+            'encodingAesKey'=> '',
+            'mchid'         => '', 
+            'mchkey'        => ''
+        ]
+];
+```
 
 ##2、使用
 
