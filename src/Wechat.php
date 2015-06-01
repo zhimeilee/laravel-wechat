@@ -32,7 +32,8 @@ class Wechat extends WechatLib {
         $options = Cache::rememberForever('Wechat_Public_Config', function()
         {
             try {
-                $conf = \App\Models\WechatPublicConfig::first();
+            	$publicConf = App::make('\App\Models\WechatPublicConfig');
+                $conf = $publicConf->first();
                 if($conf){
                     return ['appid'=>$conf->app_id, 'appsecret'=>$conf->app_secret, 'encodingAesKey'=>$conf->encodingaeskey,
                         'mchid'=>$conf->mchid, 'mchkey'=>$conf->mchkey];
