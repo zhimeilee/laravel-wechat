@@ -60,11 +60,11 @@ class Wechat extends WechatLib {
     /**
      * 创建二维码ticket
      * @param int $scene_id 自定义追踪id
-     * @param int $type 0:临时二维码；1:永久二维码(此时expire参数无效)；2 :永久二维码（字符串参数值）(此时expire参数无效)
+     * @param int $type 1:临时二维码；0:永久二维码(此时expire参数无效)；2 :永久二维码（字符串参数值）(此时expire参数无效)
      * @param int $expire 临时二维码有效期，最大为1800秒
      * @return array('ticket'=>'qrcode字串','expire_seconds'=>1800,'url'=>'二维码图片解析后的地址')
      */
-    public function getQRCode($scene_id,$type=0,$expire=1800){
+    public function getQRCode($scene_id,$type=0,$expire=604800){
         if (!$this->checkAuth()) return false;
         $action_name = 'QR_LIMIT_SCENE';
         $scene_id_key = 'scene_id';
@@ -79,7 +79,7 @@ class Wechat extends WechatLib {
             'expire_seconds'=>$expire,
             'action_info'=>array('scene'=>array($scene_id_key=>$scene_id))
         );
-        if ($type == 1) {
+        if ($type != 1) {
             unset($data['expire_seconds']);
         }
         $result = $this->httpPost(self::API_URL_PREFIX.self::QRCODE_CREATE_URL.'access_token='.$this->getAccessToken(),self::json_encode($data));
