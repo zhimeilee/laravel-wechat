@@ -140,7 +140,7 @@ class Wechat extends WechatLib {
      */
     private function getOpenidAndAccessTokenFromAuth($scope='snsapi_base')
     {
-        if(Request::input( 'code' )){
+        if(Request::input( 'code' ) && Request::input( 'code' )!='authdeny'){
             $param ['appid'] = $this->option['appid'];
             $param ['secret'] = $this->option['appsecret'];
             $param ['code'] = Request::input( 'code' );
