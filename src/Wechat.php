@@ -150,8 +150,6 @@ class Wechat extends WechatLib {
             $content = $this->httpGet ( $url );
             $content = json_decode ( $content, true );
             return $content;
-        }elseif(Request::input('state')){
-            return [];
         }else{
             $param ['appid'] = $this->option['appid'];
             $param ['redirect_uri'] = Request::fullUrl();
