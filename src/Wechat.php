@@ -127,7 +127,7 @@ class Wechat extends WechatLib {
     function getAtuhUserInfo(){
 
         $data = $this->getOpenidAndAccessTokenFromAuth('snsapi_userinfo');
-        if(!empty($data)) {
+        if(!empty($data) && isset($data['access_token'])) {
             $url = self::API_BASE_URL_PREFIX.self::OAUTH_USERINFO_URL.'access_token='.$data['access_token'].'&openid='.$data['openid'].'&lang=zh_CN';
             $content = $this->httpGet($url);
             $content = json_decode($content, true);
