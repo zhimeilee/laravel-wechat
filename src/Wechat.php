@@ -431,7 +431,7 @@ class Wechat extends WechatLib {
      * @return boolean
      */
     protected function setCache($cachename,$value,$expired){
-        Cache::put($cachename,$value,$expired/60);
+        Cache::put($cachename,$value,floor($expired/60));
         return false;
     }
 
