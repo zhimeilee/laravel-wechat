@@ -171,9 +171,9 @@ class Wechat extends WechatLib {
      * @param callable        $notify_url 接收微信支付异步通知回调地址
      * @param callable        $trade_type  取值如下：JSAPI，NATIVE，APP，WAP,详细说明见
      */
-    public function getPayPrepayId($out_trade_no, $body, $total_fee, $notify_url, $trade_type="JSAPI"){
+    public function getPayPrepayId($out_trade_no, $body, $total_fee, $notify_url, $trade_type="JSAPI", $openid=''){
 
-        $parameters["openid"] = $this->getOpenid();
+        $parameters["openid"] = $openid?$openid:$this->getOpenid();
         $parameters["out_trade_no"] = $out_trade_no;
         $parameters["body"] = $body;
         $parameters["total_fee"] = $total_fee;
