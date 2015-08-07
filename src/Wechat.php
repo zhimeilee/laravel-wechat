@@ -140,7 +140,8 @@ class Wechat extends WechatLib {
      */
     private function getOpenidAndAccessTokenFromAuth($scope='snsapi_base')
     {
-        if(Request::input( 'code' ) && Request::input( 'code' )!='authdeny'){
+    	$state = 'wechat_auth_snsapi_for_state';
+        if(Request::input( 'code' ) && Request::input('state')==$state && Request::input( 'code' )!='authdeny'){
             $param ['appid'] = $this->option['appid'];
             $param ['secret'] = $this->option['appsecret'];
             $param ['code'] = Request::input( 'code' );
@@ -149,13 +150,19 @@ class Wechat extends WechatLib {
             $url = self::API_BASE_URL_PREFIX . self::OAUTH_TOKEN_URL . http_build_query ( $param );
             $content = $this->httpGet ( $url );
             $content = json_decode ( $content, true );
+            //为兼容，访问别人分享的链接中带有code和state参数
+            if(isset($content['errcode']) && $content['errcode']==40029){
+            	$url = str_ireplace("state=".$state, '', Request::fullUrl());
+            	header("Location:".$url);
+            	exit;
+            }
             return $content;
         }else{
             $param ['appid'] = $this->option['appid'];
             $param ['redirect_uri'] = Request::fullUrl();
             $param ['response_type'] = 'code';
             $param ['scope'] = $scope;
-            $param ['state'] = 123;
+            $param ['state'] = $state;
             $url = self::OAUTH_PREFIX . self::OAUTH_AUTHORIZE_URL . http_build_query ( $param ) . '#wechat_redirect';
             header("Location:".$url);
             exit;
