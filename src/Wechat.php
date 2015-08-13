@@ -152,7 +152,8 @@ class Wechat extends WechatLib {
             $content = json_decode ( $content, true );
             //为兼容，访问别人分享的链接中带有code和state参数
             if(isset($content['errcode']) && $content['errcode']==40029){
-            	$url = str_ireplace("state=".$state, '', Request::fullUrl());
+            	$url = str_ireplace(["state=".$state, '#wechat_redirect'], '', Request::fullUrl());
+                $url = preg_replace("/code=[^&=#]+/", "", $url);
             	header("Location:".$url);
             	exit;
             }
