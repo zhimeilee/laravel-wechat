@@ -106,6 +106,7 @@ class Wechat extends WechatLib {
         $openid = $openid?$openid:Request::input('openid');
         if($openid) {
             session([$sessionKey => $openid]);
+            Session::save();
             return $openid;
         }
         $openid = Session::get($sessionKey, function() { return false; });
@@ -117,6 +118,7 @@ class Wechat extends WechatLib {
         $data = $this->getOpenidAndAccessTokenFromAuth();
         if(isset($data['openid'])) {
             session([$sessionKey => $data['openid']]);
+            Session::save();
             return $data['openid'];
         }
         return -1;
