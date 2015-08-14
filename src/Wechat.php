@@ -100,10 +100,10 @@ class Wechat extends WechatLib {
      * 	网页授权, 通过curl向微信提交code，以获取openid
      *  微信官方后台需设置授权回调页面域名
      */
-    function getOpenid()
+    function getOpenid($openid='')
     {
         $sessionKey = 'Openid_'.$this->option['appid'];
-        $openid = Request::input('openid');
+        $openid = $openid?$openid:Request::input('openid');
         if($openid) {
             session([$sessionKey => $openid]);
             return $openid;
@@ -128,6 +128,7 @@ class Wechat extends WechatLib {
 
         $data = $this->getOpenidAndAccessTokenFromAuth('snsapi_userinfo');
         if(!empty($data) && isset($data['access_token'])) {
+       	    $this->getOpenid($data['openid']);
             $url = self::API_BASE_URL_PREFIX.self::OAUTH_USERINFO_URL.'access_token='.$data['access_token'].'&openid='.$data['openid'].'&lang=zh_CN';
             $content = $this->httpGet($url);
             $content = json_decode($content, true);
