@@ -294,92 +294,6 @@ class Wechat extends WechatLib {
 		return false;
 	}
 
-	private function eventReply_will_delete($callback,$event){
-
-        switch ($this->getRev()->getRevType()) {
-            //文本
-            case self::MSGTYPE_TEXT:
-                break;
-            //图像
-            case self::MSGTYPE_IMAGE:
-                break;
-            //语音
-            case self::MSGTYPE_VOICE:
-                break;
-            //视频
-            case self::MSGTYPE_VIDEO:
-                break;
-            //小视频
-            case 'shortvideo':
-                break;
-            //位置
-            case self::MSGTYPE_LOCATION:
-                break;
-            //链接
-            case self::MSGTYPE_LINK:
-                break;
-            //事件
-            case self::MSGTYPE_EVENT:
-                $event = $this->getRevEvent();
-                switch ($event['event']) {
-                    //关注
-                    case self::EVENT_SUBSCRIBE:
-                        //二维码关注
-                        if(isset($event['key']) && $this->getRevTicket()){
-                        //普通关注
-                        }else{
-                        }
-                        break;
-                    //扫描二维码
-                    case self::EVENT_SCAN:
-                        break;
-                    //地理位置
-                    case self::EVENT_LOCATION:
-                        break;
-                    //自定义菜单 - 点击菜单拉取消息时的事件推送
-                    case self::EVENT_MENU_CLICK:
-                        break;
-                    //自定义菜单 - 点击菜单跳转链接时的事件推送
-                    case self::EVENT_MENU_VIEW:
-                        break;
-                    //自定义菜单 - 扫码推事件的事件推送
-                    case 'scancode_push':
-                        break;
-                    //自定义菜单 - 扫码推事件且弹出“消息接收中”提示框的事件推送
-                    case 'scancode_waitmsg':
-                        break;
-                    //自定义菜单 - 弹出系统拍照发图的事件推送
-                    case 'pic_sysphoto':
-                        break;
-                    //自定义菜单 - 弹出拍照或者相册发图的事件推送
-                    case 'pic_photo_or_album':
-                        break;
-                    //自定义菜单 - 弹出微信相册发图器的事件推送
-                    case 'pic_weixin':
-                        break;
-                    //自定义菜单 - 弹出地理位置选择器的事件推送
-                    case 'location_select':
-                        break;
-                    //取消关注
-                    case 'unsubscribe':
-                        break;
-                    //群发接口完成后推送的结果
-                    case 'masssendjobfinish':
-                        break;
-                    //模板消息完成后推送的结果
-                    case 'templatesendjobfinish':
-                        break;
-                    default:
-                        $this->text("收到未知的消息，我不知道怎么处理")->reply();
-                        break;
-                }
-                break;
-            default:
-                $this->text("收到未知的消息，我不知道怎么处理")->reply();
-                break;
-        }
-    }
-
 	public function httpGet($url) {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -442,8 +356,7 @@ class Wechat extends WechatLib {
      * @return boolean
      */
     protected function setCache($cachename,$value,$expired){
-        Cache::put($cachename,$value,floor($expired/60));
-        return false;
+    	Cache::store(config('wechat.cache', 'file'))->put($cachename,$value,floor($expired/60));
     }
 
     /**
@@ -452,8 +365,7 @@ class Wechat extends WechatLib {
      * @return mixed
      */
     protected function getCache($cachename){
-        return Cache::get($cachename);
-        // return false;
+    	return Cache::store(config('wechat.cache', 'file'))->get($cachename);
     }
 
     /**
@@ -462,8 +374,7 @@ class Wechat extends WechatLib {
      * @return boolean
      */
     protected function removeCache($cachename){
-        Cache::forget($cachename);
-        return false;
+        Cache::store(config('wechat.cache', 'file'))->forget($cachename);
     }
 
     /*
