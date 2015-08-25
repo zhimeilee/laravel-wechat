@@ -113,7 +113,7 @@ class Wechat extends WechatLib {
         if($openid)
             return $openid;
         if(!isWeixinBrowser())
-            return -1;
+            return null;
 
         $data = $this->getOpenidAndAccessTokenFromAuth();
         if(isset($data['openid'])) {
@@ -121,7 +121,7 @@ class Wechat extends WechatLib {
             Session::save();
             return $data['openid'];
         }
-        return -1;
+        return null;
     }
     /*
      * 网页授权获取用户基本信息
@@ -136,7 +136,7 @@ class Wechat extends WechatLib {
             $content = json_decode($content, true);
             return $content;
         }
-        return [];
+        return null;
     }
     /**
      * 	作用：生成可以获得openid的url
@@ -158,7 +158,7 @@ class Wechat extends WechatLib {
             	$url = str_ireplace(["state=".$state, '#wechat_redirect'], '', Request::fullUrl());
                 $url = preg_replace("/code=[^&=#]+/", "", $url);
             	header("Location:".$url);
-            	return;
+            	return null;
             }
             return $content;
         }else{
@@ -169,7 +169,7 @@ class Wechat extends WechatLib {
             $param ['state'] = $state;
             $url = self::OAUTH_PREFIX . self::OAUTH_AUTHORIZE_URL . http_build_query ( $param ) . '#wechat_redirect';
             header("Location:".$url);
-            return;
+            return null;
         }
 
     }
