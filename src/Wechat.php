@@ -158,7 +158,7 @@ class Wechat extends WechatLib {
             	$url = str_ireplace(["state=".$state, '#wechat_redirect'], '', Request::fullUrl());
                 $url = preg_replace("/code=[^&=#]+/", "", $url);
             	header("Location:".$url);
-            	exit;
+            	return;
             }
             return $content;
         }else{
@@ -169,7 +169,7 @@ class Wechat extends WechatLib {
             $param ['state'] = $state;
             $url = self::OAUTH_PREFIX . self::OAUTH_AUTHORIZE_URL . http_build_query ( $param ) . '#wechat_redirect';
             header("Location:".$url);
-            exit;
+            return;
         }
 
     }
