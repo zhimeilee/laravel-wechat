@@ -21,6 +21,7 @@ class Wechat extends WechatLib {
     protected $option = null;
     const MCH_URL = "https://api.mch.weixin.qq.com";
     const UNIFIEDORDER_URL = "/pay/unifiedorder";
+    const CLOSE_ORDER_URL = "/pay/closeorder";
 
     /**
      * 获取实例
@@ -173,6 +174,22 @@ class Wechat extends WechatLib {
         }
 
     }
+    
+    /**
+     * 取消微信订单 (注意：订单生成后不能马上调用关单接口，最短调用时间间隔为5分钟。)
+     * @param $out_trade_no
+     */
+    public function closeOrder($out_trade_no){
+        $parameters["appid"] = $this->option['appid'];//公众账号ID
+        $parameters["mch_id"] = $this->option['mchid'];//商户号
+        $parameters["out_trade_no"] = $out_trade_no;
+        $parameters["nonce_str"] = $this->generateNonceStr();//随机字符串
+        $parameters['sign'] = $this->getPaySign($parameters);//签名
+        $xml = $this->xml_encode($parameters);
+        $data = $this->httpPost(self::MCH_URL.self::CLOSE_ORDER_URL, $xml);
+        $arr = json_decode(json_encode(simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+        return $arr;
+    }
 
     /*
      * JSAPI支付——H5网页端调起支付接口
@@ -194,7 +211,7 @@ class Wechat extends WechatLib {
         $parameters["mch_id"] = $this->option['mchid'];//商户号
         $parameters["spbill_create_ip"] = $_SERVER['REMOTE_ADDR'];//终端ip
         $parameters["nonce_str"] = $this->generateNonceStr();//随机字符串
-        $parameters["sign"] = $this->getPaySign($parameters);;//签名
+        $parameters["sign"] = $this->getPaySign($parameters);//签名
         $xml = $this->xml_encode($parameters);
         $data = $this->httpPost(self::MCH_URL.self::UNIFIEDORDER_URL ,$xml);
         $arr = json_decode(json_encode(simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
